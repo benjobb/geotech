@@ -1,6 +1,6 @@
 from django.forms import ModelForm, inlineformset_factory
 
-from .models import Profile, FamilyMember
+from .models import *
 
 
 class ProfileForm(ModelForm):
@@ -9,11 +9,11 @@ class ProfileForm(ModelForm):
         exclude = ()
 
 
-class FamilyMemberForm(ModelForm):
+class LayerForm(ModelForm):
     class Meta:
-        model = FamilyMember
+        model = Layers
         exclude = ()
 
 
-FamilyMemberFormSet = inlineformset_factory(Profile, FamilyMember,
-                                            form=FamilyMemberForm, extra=1)
+LayerFormSet = inlineformset_factory(Profile, Layers,
+                                            form=LayerForm, extra=1)

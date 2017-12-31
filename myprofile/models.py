@@ -6,18 +6,18 @@ from django.utils import timezone
 
 
 class Profile(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     created_date = models.DateTimeField(default=timezone.now)
 
     def get_absolute_url(self):
         return reverse('profile-update', kwargs={'pk': self.pk})
 
     def __unicode__(self):
-        return "%s %s" % (self.first_name, self.last_name)
+        return "%s %s" % (self.name)
 
 
-class FamilyMember(models.Model):
-    profile = models.ForeignKey(Profile)
+class Layers(models.Model):
+    profile = models.ForeignKey(Profile, related_name = 'profilelayer_set')
     name = models.CharField(max_length=100)
-    relationship = models.CharField(max_length=100)
+    depth = models.DecimalField(decimal_places = 2, max_digits = 5, default =0)
+    SPT_N_Value = models.IntegerField(default=0)

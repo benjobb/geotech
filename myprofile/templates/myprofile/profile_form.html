@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
+
 
 {% block title %}{% endblock %}
 {% block content %}
     <h2>Profile</h2>
     <hr>
     <div class="col-md-4">
-        <form action="" method="post">{% csrf_token %}
+        <form action="" method="POST">{% csrf_token %}
             {{ form.as_p }}
 
             <table class="table">
-                {{ familymembers.management_form }}
+                {{ layers.management_form }}
 
-                {% for form in familymembers.forms %}
+                {% for form in layers.forms %}
                     {% if forloop.first %}
                         <thead>
                         <tr>
@@ -38,16 +40,16 @@
                     </tr>
                 {% endfor %}
             </table>
-            <input type="submit" value="Save"/> <a href="{% url 'profile-list' %}">back to the list</a>
+            <input type="submit" value="Save" /> <a href="{% url 'profile-list' %}">back to the list</a>
         </form>
     </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="{% static 'formset/jquery.formset.js' %}"></script>
     <script type="text/javascript">
         $('.formset_row').formset({
-            addText: 'add family member',
+            addText: 'Add layer',
             deleteText: 'remove',
-            prefix: 'familymember_set'
+            prefix: 'profilelayer_set'
         });
     </script>
 {% endblock %}

@@ -3,7 +3,7 @@ from django.db import transaction
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 
 from .models import Profile
-from .forms import FamilyMemberFormSet
+from .forms import LayerFormSet
 
 
 class ProfileList(ListView):
@@ -12,63 +12,63 @@ class ProfileList(ListView):
 
 class ProfileCreate(CreateView):
     model = Profile
-    fields = ['first_name', 'last_name']
+    fields = ['name']
 
 
-class ProfileFamilyMemberCreate(CreateView):
+class ProfileLayerCreate(CreateView):
     model = Profile
-    fields = ['first_name', 'last_name']
+    fields = ['name']
     success_url = reverse_lazy('profile-list')
 
     def get_context_data(self, **kwargs):
-        data = super(ProfileFamilyMemberCreate, self).get_context_data(**kwargs)
+        data = super(ProfileLayerCreate, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['familymembers'] = FamilyMemberFormSet(self.request.POST)
+            data['layers'] = LayerFormSet(self.request.POST)
         else:
-            data['familymembers'] = FamilyMemberFormSet()
+            data['layers'] = LayerFormSet()
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
-        familymembers = context['familymembers']
+        layers = context['layers']
         with transaction.atomic():
             self.object = form.save()
 
-            if familymembers.is_valid():
-                familymembers.instance = self.object
-                familymembers.save()
-        return super(ProfileFamilyMemberCreate, self).form_valid(form)
+            if layers.is_valid():
+                layers.instance = self.object
+                layers.save()
+        return super(ProfileLayerCreate, self).form_valid(form)
 
 
 class ProfileUpdate(UpdateView):
     model = Profile
     success_url = '/'
-    fields = ['first_name', 'last_name']
+    fields = ['name']
 
 
-class ProfileFamilyMemberUpdate(UpdateView):
+class ProfileLayerUpdate(UpdateView):
     model = Profile
-    fields = ['first_name', 'last_name']
+    fields = ['name']
     success_url = reverse_lazy('profile-list')
 
     def get_context_data(self, **kwargs):
-        data = super(ProfileFamilyMemberUpdate, self).get_context_data(**kwargs)
+        data = super(ProfileLayerUpdate, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['familymembers'] = FamilyMemberFormSet(self.request.POST, instance=self.object)
+            data['layers'] = LayerFormSet(self.request.POST, instance=self.object)
         else:
-            data['familymembers'] = FamilyMemberFormSet(instance=self.object)
+            data['layers'] = LayerFormSet(instance=self.object)
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
-        familymembers = context['familymembers']
+        layers = context['layers']
         with transaction.atomic():
             self.object = form.save()
 
-            if familymembers.is_valid():
-                familymembers.instance = self.object
-                familymembers.save()
-        return super(ProfileFamilyMemberUpdate, self).form_valid(form)
+            if layers.is_valid():
+                layers.instance = self.object
+                layers.save()
+        return super(ProfileLayerUpdate, self).form_valid(form)
 
 
 class ProfileDelete(DeleteView):
