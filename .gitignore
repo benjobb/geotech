@@ -90,3 +90,6 @@ mybook_env/
 .ropeproject
 
 *.sqlite3
+
+# migrations
+myprofile/migrations/

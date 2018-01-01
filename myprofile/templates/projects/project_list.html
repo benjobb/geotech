@@ -2,9 +2,9 @@
 {% block title %}{% endblock %}
 {% block content %}
 
-    <h2>Soil Profile List for {{project.name}} </h2>
+    <h2>Project List </h2>
     <p>
-        <a href="{% url 'profile-add' project_pk %}">Add a borehole</a>
+        <a href="{% url 'project-create' %}">add a project</a>
     </p>
 
     <div>
@@ -12,7 +12,7 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>Borehole Name</th>
+            <th>Project Name</th>
             <th>Date Logged</th>
             <th>Edit</th>
             <th>Delete</th>
@@ -20,13 +20,13 @@
           </tr>
         </thead>
         <tbody>
-          {% for profile in profiles %}
+          {% for project in object_list %}
 
           <tr>
-            <td><a href="{% url 'profile-view' profile.pk %}">{{ profile.name }}</a> </td>
-            <td>{{ profile.created_date}}</td>
-            <td><a href="{% url 'profile-update' profile.pk %}">edit</a></td>
-            <td><a href="{% url 'profile-delete' profile.pk %}">delete</a></td>
+            <td><a href="{% url 'project-view' project.pk %}">{{ project.name }}</a> </td>
+            <td>{{ project.created_date}}</td>
+            <td><a href="{% url 'project-update' project.pk %}">edit</a></td>
+            <td><a href="{% url 'project-delete' project.pk %}">delete</a></td>
 
           </tr>
           {% empty %}
