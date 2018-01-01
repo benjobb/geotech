@@ -23,10 +23,10 @@
           {% for profile in profiles %}
 
           <tr>
-            <td><a href="{% url 'profile-view' profile.pk %}">{{ profile.name }}</a> </td>
+            <td><a href="{% url 'profile-view' profile_pk=profile.pk project_pk=project_pk %}">{{profile.name}}</a> </td>
             <td>{{ profile.created_date}}</td>
-            <td><a href="{% url 'profile-update' profile.pk %}">edit</a></td>
-            <td><a href="{% url 'profile-delete' profile.pk %}">delete</a></td>
+            <td><a href="{% url 'profile-update' profile_pk=profile.pk project_pk=project_pk %}">edit</a></td>
+            <td><a href="{% url 'profile-delete' profile_pk=profile.pk project_pk=project_pk %}">delete</a></td>
 
           </tr>
           {% empty %}

@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myprofile',
     'widget_tweaks',
-
+    'chartit',
 ]
 
 MIDDLEWARE_CLASSES = [

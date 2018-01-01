@@ -5,6 +5,8 @@ from django.shortcuts import render
 
 from .models import Profile, Layers, Project
 from .forms import LayerFormSet
+from chartit import DataPool, Chart
+
 
 class Object(object):
     pass
@@ -18,6 +20,10 @@ class ProfileList(ListView):
         project_pk = self.kwargs['project_pk']
         project = Project.objects.get(pk = project_pk)
         context['project']=project
+        profiles = Profile.objects.filter(project=project)
+        print "Project pk is " + project_pk
+        print "profiles"
+        print profiles
         return context
 
     def get_queryset(self):
@@ -41,17 +47,48 @@ def ProfileView(request,project_pk,profile_pk):
         raise Http404("Profile does not exist")
 
     #book_id=get_object_or_404(Book, pk=pk)
+    #chart
+    layerdata = DataPool(
+          series=
+            [{
+            'options': {
+               'source': Layers.objects.filter(profile=profile)
+            },
+            'terms': [
+                'depth',
+                'name',
+                'SPT_N_Value'
+            ]
+                }
+             ])
 
+    cht = Chart(
+            datasource = layerdata,
+            series_options =
+              [{'options':{
+                  'type': 'column',
+                  'stacking': True},
+                'terms':{
+                  'name': [
+                    'depth']
+                  }}],
+            chart_options =
+              {'title': {
+                   'text': 'Depth of profile'},
+               'xAxis': {
+                    'title': {
+                       'text': 'Name of borehole'}}})
     return render(
         request,
         'myprofile/view_profile.html',
-        context={'profile':profile,'layers':layers}
+        context={'profile':profile,'layers':layers, 'layerchart':cht}
     )
 
 class ProfileLayerCreate(CreateView):
     model = Profile
     fields = ['name', 'water_table_depth']
     success_url = reverse_lazy('profile-list')
+    pk_url_kwarg = 'profile_pk'
 
     def get_context_data(self, **kwargs):
         data = super(ProfileLayerCreate, self).get_context_data(**kwargs)
@@ -83,12 +120,14 @@ class ProfileUpdate(UpdateView):
     model = Profile
     success_url = '/'
     fields = ['name',  'water_table_depth']
+    pk_url_kwarg = 'profile_pk'
 
 
 class ProfileLayerUpdate(UpdateView):
     model = Profile
     fields = ['name', 'water_table_depth']
-    success_url = reverse_lazy('profile-list')
+    pk_url_kwarg = 'profile_pk'
+
 
     def get_context_data(self, **kwargs):
         data = super(ProfileLayerUpdate, self).get_context_data(**kwargs)
@@ -101,11 +140,16 @@ class ProfileLayerUpdate(UpdateView):
             data['layers'] = LayerFormSet(self.request.POST, instance=self.object)
             data['project_pk'] = self.kwargs['project_pk']
 
-
         else:
             data['layers'] = LayerFormSet(instance=self.object)
             data['project_pk'] = self.kwargs['project_pk']
         return data
+
+    def get_success_url(self):
+        project_pk = self.kwargs['project_pk']
+        project = Project.objects.get(pk = project_pk)
+        profiles = Profile.objects.filter(project=project)
+        return reverse_lazy('profile-list', kwargs={'project_pk': self.kwargs['project_pk']})
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -122,6 +166,7 @@ class ProfileLayerUpdate(UpdateView):
 class ProfileDelete(DeleteView):
     model = Profile
     success_url = reverse_lazy('profile-list')
+    pk_url_kwarg = 'profile_pk'
 
 
 # projects
